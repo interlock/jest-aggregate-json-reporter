@@ -2,16 +2,14 @@
   "name": "jest-json-reporter",
   "version": "1.2.2",
   "description": "JSON test results processor for Jest.",
-  "main": "index.js",
+  "main": "build/index.js",
+  "type": "build/index.ts.d",
   "scripts": {
     "test": "jest",
-    "dev": "jest --watch"
-  },
-  "jest": {
-    "testResultsProcessor": "."
-  },
-  "jestJsonReporter": {
-    "outputFile": "results.json"
+    "dev": "jest --watch",
+    "tsc": "tsc",
+    "lint": "eslint . --ext .ts",
+    "prepublishOnly": "npm test && npm run lint"
   },
   "repository": {
     "type": "git",
@@ -29,9 +27,18 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "jest": "^19.0.2"
+    "@jest/reporters": "^26.0.1",
+    "@jest/types": "^26.0.1",
+    "@types/jest": "^25.2.2",
+    "@types/node": "^14.0.1",
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
+    "eslint": "^7.0.0",
+    "jest": "^26.0.1",
+    "ts-jest": "^25.5.1",
+    "typescript": "^3.9.2"
   },
   "dependencies": {
-    "read-pkg": "^2.0.0"
+    "read-pkg": "^5.2.0"
   }
 }
