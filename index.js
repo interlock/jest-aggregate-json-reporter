@@ -8,7 +8,7 @@ module.exports = (testResults) => {
   const packagedData = readPkg.sync(process.cwd())
   const config = packagedData.jestJsonReporter || {};
 
-  const outputFile = config.outputFile || './test-results.json';
+  const outputFile = config.outputFile || process.env.JSON_REPORTER_OUTPUT || './test-results.json';
 
   fs.writeFile(outputFile, testResultsString, (err) => {
     if (err) {
