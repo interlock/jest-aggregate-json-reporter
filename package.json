@@ -1,6 +1,6 @@
 {
   "name": "jest-aggregate-json-reporter",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "JSON test results processor for Jest.",
   "main": "build/index.js",
   "type": "build/index.ts.d",

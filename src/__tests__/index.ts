@@ -1,5 +1,5 @@
 import { mocked } from 'ts-jest/utils'
-import JestJsonReporter from '../index';
+import JestJsonReporter, {JsonAggregateReport} from '../index';
 jest.mock('read-pkg-up');
 import * as fs from 'fs';
 import * as path from 'path';
@@ -16,7 +16,7 @@ declare type ReadConfig = {
   projectConfig: Config.ProjectConfig;
 };
 
-const STRINGIFIED_TEST_RESULTS = JSON.stringify({testResults:[], aggregateResults: makeEmptyAggregatedTestResult()});
+const STRINGIFIED_TEST_RESULTS = JSON.stringify({testResults:[], aggregatedResult: makeEmptyAggregatedTestResult()} as JsonAggregateReport);
 const TEST_RESULTS_JSON = path.resolve(__dirname, '../..', 'test-results.json');
 const OTHER_NAME = 'other-name.json';
 const OTHER_NAME_PATH = path.resolve(__dirname, '../..', OTHER_NAME);
