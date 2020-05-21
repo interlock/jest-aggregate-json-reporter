@@ -9,7 +9,7 @@
     "dev": "jest --watch",
     "tsc": "tsc",
     "lint": "eslint . --ext .ts",
-    "prepublishOnly": "yarn test && yarn lint"
+    "prepublishOnly": "yarn test && yarn lint && yarn tsc"
   },
   "repository": {
     "type": "git",
