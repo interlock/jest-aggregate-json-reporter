@@ -1,5 +1,5 @@
 import { mocked } from 'ts-jest/utils'
-import JestJsonReporter from '../src/index';
+import JestJsonReporter from '../index';
 jest.mock('read-pkg-up');
 import * as fs from 'fs';
 import * as path from 'path';
@@ -16,10 +16,10 @@ declare type ReadConfig = {
   projectConfig: Config.ProjectConfig;
 };
 
-const STRINGIFIED_TEST_RESULTS = JSON.stringify(makeEmptyAggregatedTestResult());
-const TEST_RESULTS_JSON = path.resolve(__dirname, '..', 'test-results.json');
+const STRINGIFIED_TEST_RESULTS = JSON.stringify({testResults:[], aggregateResults: makeEmptyAggregatedTestResult()});
+const TEST_RESULTS_JSON = path.resolve(__dirname, '../..', 'test-results.json');
 const OTHER_NAME = 'other-name.json';
-const OTHER_NAME_PATH = path.resolve(__dirname, '..', OTHER_NAME);
+const OTHER_NAME_PATH = path.resolve(__dirname, '../..', OTHER_NAME);
 
 function unlink(path: string) {
   if (fs.existsSync(path)) {

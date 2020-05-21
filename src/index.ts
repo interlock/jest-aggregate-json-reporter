@@ -3,13 +3,28 @@ import readPkg = require('read-pkg-up');
 import { Test, TestResult, AggregatedResult, Reporter, Context } from "@jest/reporters";
 import { Config } from "@jest/types";
 
-export default class JsonReporter implements Reporter {
+export type JsonAggregateReport = {
+  testResults: TestResult[];
+  aggregatedResult: AggregatedResult;
+}
+
+export function trimTestResult(testResult: TestResult) {
+  testResult.coverage = undefined;
+  testResult.sourceMaps = undefined;
+}
+
+export default class JsonAggregateReporter implements Reporter {
   _globalConfig: Config.GlobalConfig;
   _options: Config.DefaultOptions;
+
+  _report: Partial<JsonAggregateReport>;
 
   constructor(globalConfig: Config.GlobalConfig, options: Config.DefaultOptions) {
     this._globalConfig = globalConfig;
     this._options = options;
+    this._report = {
+      testResults: []
+    };
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -21,15 +36,19 @@ export default class JsonReporter implements Reporter {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   getLastError() { }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
-  onTestResult(test: Test, testResult: TestResult, aggregatedResult: AggregatedResult) { }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onTestResult(test: Test, testResult: TestResult, aggregatedResult: AggregatedResult) {
+    trimTestResult(testResult);
+    this._report.testResults?.push(testResult);
+  }
 
   onRunComplete(contexts: Set<Context>, results: AggregatedResult) {
+    this._report.aggregatedResult = results;
     const packagedData = readPkg.sync({cwd: process.cwd()});
     const config = {
       outputFile: packagedData?.packageJson?.jestAggregateJsonReporter || process.env.JSON_AGGREGATE_REPORTER_OUTPUT || './test-results.json'
     };
-    const testResultsString = JSON.stringify(results);
+    const testResultsString = JSON.stringify(this._report);
 
     const outputFile = config.outputFile;
 

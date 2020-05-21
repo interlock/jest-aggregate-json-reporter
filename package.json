@@ -6,6 +6,7 @@
   "type": "build/index.ts.d",
   "scripts": {
     "test": "jest",
+    "test:report": "yarn tsc && jest --reporters ./build/index.js",
     "dev": "jest --watch",
     "tsc": "tsc",
     "lint": "eslint . --ext .ts",
