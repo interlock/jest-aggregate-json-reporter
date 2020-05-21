@@ -1,5 +1,7 @@
 # Jest JSON Reporter
 
+![Node.js CI](https://github.com/interlock/jest-aggregate-json-reporter/workflows/Node.js%20CI/badge.svg)
+
 JSON test results processor for Jest. Outputs the test results in JSON format as speified in the [jest documentation](http://facebook.github.io/jest/docs/configuration.html#testresultsprocessor-string) to a file called test-results.json (configurable)
 
 ## Setup
