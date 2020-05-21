@@ -1,6 +1,6 @@
 {
-  "name": "jest-json-reporter",
-  "version": "1.2.2",
+  "name": "jest-aggregate-json-reporter",
+  "version": "0.0.1",
   "description": "JSON test results processor for Jest.",
   "main": "build/index.js",
   "type": "build/index.ts.d",
@@ -13,9 +13,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Vall3y/jest-json-reporter.git"
+    "url": "git+https://github.com/interlock/jest-aggregate-json-reporter.git"
   },
-  "homepage": "https://github.com/Vall3y/jest-json-reporter",
+  "homepage": "https://github.com/interlock/jest-aggregate-json-reporter",
   "keywords": [
     "test",
     "jest",
@@ -25,7 +25,7 @@
       "email": "vall3y@gmail.com",
       "name": "Guy Zissman"
     },
-    { "name": "June Sapara"}
+    { "name": "June Sapara" }
   ],
   "license": "MIT",
   "devDependencies": {

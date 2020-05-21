@@ -1,5 +1,6 @@
 import { mocked } from 'ts-jest/utils'
 import JestJsonReporter from '../src/index';
+jest.mock('read-pkg-up');
 import * as fs from 'fs';
 import * as path from 'path';
 import * as readPkg from 'read-pkg-up';
@@ -16,12 +17,14 @@ declare type ReadConfig = {
 };
 
 const STRINGIFIED_TEST_RESULTS = JSON.stringify(makeEmptyAggregatedTestResult());
+const TEST_RESULTS_JSON = path.resolve(__dirname, '..', 'test-results.json');
+const OTHER_NAME = 'other-name.json';
+const OTHER_NAME_PATH = path.resolve(__dirname, '..', OTHER_NAME);
 
-function getParams() {
-  return {
-    outputFile: mocked(fs).writeFile.mock.calls[0][0],
-    stringifiedTestResults: mocked(fs).writeFile.mock.calls[0][1],
-  };
+function unlink(path: string) {
+  if (fs.existsSync(path)) {
+    fs.unlinkSync(path);
+  }
 }
 
 describe("write results", () => {
@@ -30,45 +33,34 @@ describe("write results", () => {
   let reporter: JestJsonReporter;
 
   beforeEach(async () => {
-    jest.mock('fs');
-    jest.mock('read-pkg-up');
-    // const a: { [argName: string]: unknown; _: string[]; $0: string } = {_:[""], $0:""}
-    // config = await jestConfig.readConfig(a, path.resolve(__dirname, '..'));
-    // reporter = new JestJsonReporter(config.globalConfig, jestConfig.defaults);
-  });
-
-  test('asdf', async () => {
-    mocked(fs).existsSync.mockReturnValue(true);
     const a: { [argName: string]: unknown; _: string[]; $0: string } = {_:[""], $0:""}
     config = await jestConfig.readConfig(a, path.resolve(__dirname, '..'));
-    expect(1).toBe(1);
+    reporter = new JestJsonReporter(config.globalConfig, jestConfig.defaults);
+    unlink(TEST_RESULTS_JSON);
   });
 
-  // test('Writes stringified results to "test-results.json" by default', () => {
-  //   reporter.onRunComplete(new Set(), makeEmptyAggregatedTestResult());
+  afterAll(() => {
+    unlink(TEST_RESULTS_JSON);
+    unlink(OTHER_NAME_PATH);
+  });
 
-  //   const { outputFile, stringifiedTestResults } = getParams();
 
-  //   expect(outputFile).toEqual('./test-results.json');
-  //   expect(stringifiedTestResults).toEqual(STRINGIFIED_TEST_RESULTS);
+  test('Writes stringified results to "test-results.json" by default', () => {
+    reporter.onRunComplete(new Set(), makeEmptyAggregatedTestResult());
 
-  //   mocked(fs).writeFile.mockClear();
-  // });
+    expect(fs.existsSync(TEST_RESULTS_JSON)).toBeTruthy();
+    expect(fs.readFileSync(TEST_RESULTS_JSON, {encoding: 'utf-8'})).toEqual(STRINGIFIED_TEST_RESULTS);
+  });
 
-  // test('Uses outputFile config value for output file', () => {
-  //   const OTHER_NAME = 'other-name.json';
+  test('Uses outputFile config value for output file', () => {
+    unlink(OTHER_NAME_PATH);
+    mocked(readPkg).sync.mockReturnValue({packageJson: {jestAggregateJsonReporter: OTHER_NAME_PATH}, path: ''});
 
-  //   mocked(readPkg).sync.mockReturnValue({packageJson: {jestJsonReporter: OTHER_NAME}, path: ''});
+    reporter.onRunComplete(new Set(), makeEmptyAggregatedTestResult());
 
-  //   reporter.onRunComplete(new Set(), makeEmptyAggregatedTestResult());
-
-  //   const { outputFile, stringifiedTestResults } = getParams();
-
-  //   expect(outputFile).toEqual(OTHER_NAME);
-  //   expect(stringifiedTestResults).toEqual(STRINGIFIED_TEST_RESULTS);
-
-  //   mocked(fs).writeFile.mockClear();
-  // });
+    expect(fs.existsSync(OTHER_NAME_PATH)).toBeTruthy();
+    expect(fs.readFileSync(OTHER_NAME_PATH, {encoding: 'utf-8'})).toEqual(STRINGIFIED_TEST_RESULTS);
+  });
 });
 
 
