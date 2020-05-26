@@ -46,7 +46,7 @@ export default class JsonAggregateReporter implements Reporter {
     this._report.aggregatedResult = results;
     const packagedData = readPkg.sync({cwd: process.cwd()});
     const config = {
-      outputFile: packagedData?.packageJson?.jestAggregateJsonReporter || process.env.JSON_AGGREGATE_REPORTER_OUTPUT || './test-results.json'
+      outputFile: process.env.JSON_AGGREGATE_REPORTER_OUTPUT || packagedData?.packageJson?.jestAggregateJsonReporter  || './test-results.json'
     };
     const testResultsString = JSON.stringify(this._report);
 
